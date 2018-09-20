@@ -1,0 +1,63 @@
+{
+  "name": "bambot",
+  "version": "1.0.0",
+  "description": "BambooHR Slack bot publishes company holidays, work anniversaries, first days, birthdays, and who is out each weekday.",
+  "license": "MIT",
+  "scripts": {
+    "build": "serverless webpack",
+    "precommit": "lint-staged",
+    "deploy": "npm test && serverless deploy --verbose",
+    "format": "prettier --write '{,!(.serverless|.webpack)/**/}*.+(js|json|md|ts|yml)'",
+    "invoke": "ENVIRONMENT=sandbox sls invoke local -f func",
+    "test": "jest",
+    "watch": "npm test -- --watch"
+  },
+  "dependencies": {
+    "@therockstorm/utils": "^2.1.0",
+    "axios": "^0.18.0",
+    "cwait": "^1.1.1",
+    "dayjs": "^1.7.5",
+    "source-map-support": "^0.5.9",
+    "xml2js-es6-promise": "^1.1.1"
+  },
+  "devDependencies": {
+    "@types/aws-lambda": "^8.10.13",
+    "@types/jest": "^23.3.2",
+    "@types/node": "^10.9.4",
+    "husky": "^0.14.3",
+    "jest": "^23.6.0",
+    "lint-staged": "^7.2.2",
+    "prettier": "^1.14.2",
+    "serverless": "^1.31.0",
+    "serverless-webpack": "^5.2.0",
+    "ts-jest": "^23.1.4",
+    "ts-loader": "^5.1.0",
+    "typescript": "^3.0.3",
+    "webpack": "^4.19.0",
+    "webpack-node-externals": "^1.7.2"
+  },
+  "jest": {
+    "transform": {
+      "^.+\\.tsx?$": "ts-jest"
+    },
+    "testRegex": "(/__tests__/.*|(\\.|/)(test|spec))\\.(jsx?|tsx?)$",
+    "moduleFileExtensions": [
+      "ts",
+      "tsx",
+      "js",
+      "jsx",
+      "json",
+      "node"
+    ]
+  },
+  "lint-staged": {
+    "*.{js,json,md,ts,yml}": [
+      "prettier --write",
+      "git add"
+    ]
+  },
+  "prettier": {
+    "semi": false,
+    "singleQuote": true
+  }
+}

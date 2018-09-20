@@ -1,0 +1,26 @@
+service: ${file(./package.json):name}
+
+provider:
+  name: aws
+  runtime: nodejs8.10
+  region: us-west-2
+  stage: ${env:ENVIRONMENT}
+  timeout: 30
+  memorySize: 128
+  environment:
+    BAMBOOHR_KEY: ${env:BAMBOOHR_KEY}
+    BAMBOOHR_SUBDOMAIN: ${env:BAMBOOHR_SUBDOMAIN}
+    SLACK_WEBHOOK_URL: ${env:SLACK_WEBHOOK_URL}
+
+custom:
+  webpack:
+    includeModules: true
+
+plugins:
+  - serverless-webpack
+
+functions:
+  func:
+    handler: src/handler.handle
+    events:
+      - schedule: cron(0 10 ? * MON-FRI *)
