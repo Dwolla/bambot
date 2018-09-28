@@ -102,15 +102,16 @@ export const timeOff = async (
   await postJson<SlackMessage>(WEBHOOK_URL, {
     text: ":palm_tree: Who's Out :palm_tree:",
     attachments: timeOff.map((o, i) => {
+      const e = es[o.id]
       const ret = returnDate(o.end)
       const diff = ret.diff(today, 'day')
-      const text = `${o.name} returns ${ret.format(
+      const text = `${e.name} returns ${ret.format(
         diff >= 7 || diff < 0 ? 'ddd, MMM D' : D_FORMAT
       )}`
       return {
         fallback: text,
         author_name: text,
-        author_icon: es[o.id].photoUrl,
+        author_icon: e.photoUrl,
         color: color(i)
       }
     })

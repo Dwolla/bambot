@@ -11,7 +11,13 @@ export type EmpMap = {
 }
 
 export type DirectoryRes = Readonly<{
-  employees: { id: string; displayName: string; photoUrl: string }[]
+  employees: {
+    id: string
+    displayName: string
+    preferredName?: string
+    lastName: string
+    photoUrl: string
+  }[]
 }>
 
 export type EmpByIdRes = Readonly<{

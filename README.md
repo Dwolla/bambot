@@ -1,6 +1,7 @@
 # bambot
 
 BambooHR Slack bot that, each weekday, publishes
+
 - Who is out
 - Birthdays
 - Work anniversaries, including a welcome message on the first day

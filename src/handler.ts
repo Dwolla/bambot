@@ -5,6 +5,8 @@ import * as dayjs from 'dayjs'
 import { employees, holidaysAndTimeOff } from './fetcher'
 import { celebrations, holidays, timeOff } from './publisher'
 
+process.on('unhandledRejection', e => error('unhandledRejection', e))
+
 export const handle: Handler = async (
   _1: ScheduledEvent & EmpMap,
   _2: Context,

@@ -2,6 +2,7 @@ import * as utils from '@therockstorm/utils'
 import * as dayjs from 'dayjs'
 import * as http from '../src/http'
 import * as colorMod from '../src/color'
+import { EmpMap } from '../src'
 jest.mock('@therockstorm/utils')
 jest.mock('../src/http')
 jest.mock('../src/color')
@@ -14,9 +15,8 @@ envVar.mockReturnValue(URL)
 color.mockReturnValue(COLOR)
 import { celebrations, holidays, timeOff } from '../src/publisher'
 
-const D_FORMAT = 'dddd'
 const YMD_FORMAT = 'YYYY-MM-DD'
-const empMap = {
+const empMap: EmpMap = {
   'my-id': {
     id: 'my-id',
     name: 'my-name',
@@ -25,8 +25,6 @@ const empMap = {
     hireDate: '2018-01-01'
   }
 }
-
-beforeEach(() => postJson.mockReset)
 
 test('envVar', () => {
   expect(envVar).toHaveBeenCalledWith('SLACK_WEBHOOK_URL')
@@ -67,7 +65,6 @@ test('publish celebrations', async () => {
 })
 
 test('not publish if no holidays', async () => {
-  await holidays(undefined)
   await holidays([])
 
   expect(postJson).not.toHaveBeenCalled
@@ -85,7 +82,6 @@ test('publish holidays', async () => {
 })
 
 test('not publish if no timeOff', async () => {
-  await timeOff(empMap, undefined, dayjs())
   await timeOff(empMap, [], dayjs())
 
   expect(postJson).not.toHaveBeenCalled

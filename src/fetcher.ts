@@ -22,7 +22,9 @@ export const employees = async (): Promise<EmpMap> =>
     (await getJson<DirectoryRes>(`${BASE_URL}/employees/directory`)).employees
       .map(e => ({
         id: e.id,
-        name: e.displayName,
+        name: e.preferredName
+          ? `${e.preferredName} ${e.lastName}`
+          : e.displayName,
         photoUrl: e.photoUrl
       }))
       .map(
