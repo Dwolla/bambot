@@ -23,4 +23,4 @@ BambooHR Slack bot that, each weekday, publishes
 
 ## Deploying
 
-- Deploy to AWS, `BAMBOOHR_KEY=YOUR_KEY BAMBOOHR_SUBDOMAIN=YOUR_SUBDOMAIN SLACK_WEBHOOK_URL=YOUR_URL npm run deploy`. It will run Mon-Fri at 10 a.m. UTC, you can adjust this schedule in `serverless.yml`.
+- Deploy to AWS, `BAMBOOHR_KEY=YOUR_KEY BAMBOOHR_SUBDOMAIN=YOUR_SUBDOMAIN SLACK_WEBHOOK_URL=YOUR_URL npm run deploy`. It will run Mon-Fri at 6 a.m. UTC, you can adjust this schedule in `serverless.yml`.
