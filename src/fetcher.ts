@@ -28,7 +28,7 @@ export const employees = async (): Promise<EmpMap> =>
         photoUrl: e.photoUrl
       }))
       .map(
-        new cwait.TaskQueue(Promise, CONCURRENCY).wrap(async e => {
+        new cwait.TaskQueue(Promise, CONCURRENCY).wrap(async (e: any) => {
           const m = await getJson<EmpByIdRes>(
             `${BASE_URL}/employees/${e.id}?fields=birthday,hireDate`
           )

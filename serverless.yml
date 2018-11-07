@@ -23,4 +23,4 @@ functions:
   func:
     handler: src/handler.handle
     events:
-      - schedule: cron(0 6 ? * MON-FRI *)
+      - schedule: cron(0 7 ? * MON-FRI *)
