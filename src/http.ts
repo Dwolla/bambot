@@ -1,6 +1,6 @@
 import axios from 'axios'
 // @ts-ignore
-import * as xml2js from 'xml2js-es6-promise'
+import xml2js from 'xml2js-es6-promise'
 
 export async function getXml<T>(url: string): Promise<T> {
   return xml2js((await axios.get(url)).data)

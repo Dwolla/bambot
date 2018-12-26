@@ -1,26 +1,26 @@
 import { envVar, log } from '@therockstorm/utils'
-import * as dayjs from 'dayjs'
-import { Emp, EmpMap, TimeOff, Holiday, Slackable, SlackMessage } from '.'
+import dayjs from 'dayjs'
+import { Day, Emp, EmpMap, TimeOff, Holiday, Slackable, SlackMessage } from '.'
 import { postJson } from './http'
 import { color } from './color'
 import { ordinal } from './ordinal'
 
 const D_FORMAT = 'dddd'
 const WEBHOOK_URL = envVar('SLACK_WEBHOOK_URL')
-const enum Day {
+const enum DayOfWeek {
+  Sun = 0,
   Mon = 1,
   Tue = 2,
   Wed = 3,
   Thu = 4,
   Fri = 5,
-  Sat = 6,
-  Sun = 7
+  Sat = 6
 }
 
-export const celebrations = async (
-  es: EmpMap,
-  today: dayjs.Dayjs
-): Promise<void> => {
+const isSat = (d: Day) => d.day() === DayOfWeek.Sat
+const isSun = (d: Day) => d.day() === DayOfWeek.Sun
+
+export const celebrations = async (es: EmpMap, today: Day): Promise<void> => {
   const dayStr = (n: number): string =>
     `${n === 0 ? '' : ` on ${today.add(n, 'day').format(D_FORMAT)}`}`
 
@@ -32,7 +32,7 @@ export const celebrations = async (
     const res = (a: boolean, d: number) => ({ isAn: a, inDays: d })
     let i = 0
     if (same(i)) return res(true, i)
-    if (today.day() === Day.Fri) {
+    if (today.day() === DayOfWeek.Fri) {
       if (same(++i)) return res(true, i)
       if (same(++i)) return res(true, i)
     }
@@ -88,14 +88,13 @@ export const holidays = async (holidays: Holiday[]): Promise<void> => {
 export const timeOff = async (
   es: EmpMap,
   timeOff: TimeOff[],
-  today: dayjs.Dayjs
+  today: Day
 ): Promise<void> => {
   if (!timeOff || timeOff.length <= 0) return
 
-  const returnDate = (ret: string): dayjs.Dayjs => {
+  const returnDate = (ret: string): Day => {
     const r = dayjs(ret).add(1, 'day')
-    const d = r.day()
-    return d === Day.Sat || d === Day.Sun ? r.add(8 - d, 'day') : r
+    return r.add(isSat(r) ? 2 : isSun(r) ? 1 : 0, 'day')
   }
 
   log('Publishing timeOff')
