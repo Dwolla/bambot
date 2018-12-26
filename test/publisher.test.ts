@@ -1,8 +1,8 @@
 import * as utils from '@therockstorm/utils'
-import * as dayjs from 'dayjs'
+import dayjs from 'dayjs'
 import * as http from '../src/http'
 import * as colorMod from '../src/color'
-import { EmpMap } from '../src'
+import { Day, EmpMap } from '../src'
 jest.mock('@therockstorm/utils')
 jest.mock('../src/http')
 jest.mock('../src/color')
@@ -14,6 +14,8 @@ const URL = 'env-var'
 envVar.mockReturnValue(URL)
 color.mockReturnValue(COLOR)
 import { celebrations, holidays, timeOff } from '../src/publisher'
+
+afterEach(() => postJson.mockClear())
 
 const YMD_FORMAT = 'YYYY-MM-DD'
 const empMap: EmpMap = {
@@ -87,13 +89,12 @@ test('not publish if no timeOff', async () => {
   expect(postJson).not.toHaveBeenCalled
 })
 
-test('publish timeOff', async () => {
-  const d = dayjs('2018-01-01')
+const expectPublishTimeOff = async (d: Day, dayOfWeek: string) => {
   const to = { id: 'my-id', name: 'my-name', end: d.format(YMD_FORMAT) }
 
   await timeOff(empMap, [to], d)
 
-  const text = `${to.name} returns Tuesday`
+  const text = `${to.name} returns ${dayOfWeek}`
   expect(postJson).toHaveBeenCalledWith(URL, {
     text: ":palm_tree: Who's Out :palm_tree:",
     attachments: [
@@ -105,4 +106,25 @@ test('publish timeOff', async () => {
       }
     ]
   })
-})
+}
+
+test('publish timeOff ending Sun', async () =>
+  await expectPublishTimeOff(dayjs('2018-01-07'), 'Monday'))
+
+test('publish timeOff ending Mon', async () =>
+  await expectPublishTimeOff(dayjs('2018-01-08'), 'Tuesday'))
+
+test('publish timeOff ending Tue', async () =>
+  await expectPublishTimeOff(dayjs('2018-01-09'), 'Wednesday'))
+
+test('publish timeOff ending Wed', async () =>
+  await expectPublishTimeOff(dayjs('2018-01-10'), 'Thursday'))
+
+test('publish timeOff ending Thu', async () =>
+  await expectPublishTimeOff(dayjs('2018-01-11'), 'Friday'))
+
+test('publish timeOff ending Fri', async () =>
+  await expectPublishTimeOff(dayjs('2018-01-12'), 'Monday'))
+
+test('publish timeOff ending Sat', async () =>
+  await expectPublishTimeOff(dayjs('2018-01-13'), 'Monday'))

@@ -1,3 +1,7 @@
+import dayjs from 'dayjs'
+
+export type Day = dayjs.Dayjs
+
 export type Emp = Readonly<{
   id: string
   name: string

@@ -1,5 +1,6 @@
 import { envVar } from '@therockstorm/utils'
 import {
+  Day,
   DirectoryRes,
   Emp,
   EmpByIdRes,
@@ -7,8 +8,8 @@ import {
   WhosOutRes,
   WhosOutMap
 } from '.'
-import * as cwait from 'cwait'
-import * as dayjs from 'dayjs'
+import { TaskQueue } from 'cwait'
+import dayjs from 'dayjs'
 import { getJson, getXml } from './http'
 
 const CONCURRENCY = 15
@@ -28,7 +29,7 @@ export const employees = async (): Promise<EmpMap> =>
         photoUrl: e.photoUrl
       }))
       .map(
-        new cwait.TaskQueue(Promise, CONCURRENCY).wrap(async (e: any) => {
+        new TaskQueue(Promise, CONCURRENCY).wrap(async (e: any) => {
           const m = await getJson<EmpByIdRes>(
             `${BASE_URL}/employees/${e.id}?fields=birthday,hireDate`
           )
@@ -43,9 +44,7 @@ export const employees = async (): Promise<EmpMap> =>
     {} as EmpMap
   )
 
-export const holidaysAndTimeOff = async (
-  today: dayjs.Dayjs
-): Promise<WhosOutMap> => {
+export const holidaysAndTimeOff = async (today: Day): Promise<WhosOutMap> => {
   const empty = { holidays: [], timeOff: [] } as WhosOutMap
   const is = (await getXml<WhosOutRes>(
     `${BASE_URL}/time_off/whos_out/?end=${today.format(YMD_FORMAT)}`
@@ -53,8 +52,8 @@ export const holidaysAndTimeOff = async (
   return is
     ? is.reduce((res, i) => {
         if (i.$.type === 'holiday' && today.isSame(dayjs(i.start[0])))
-          res.holidays.push({ name: i.holidays[0]._ })
-        if (i.$.type === 'timeOff')
+          res.holidays.push({ name: i.holiday[0]._ })
+        else if (i.$.type === 'timeOff')
           res.timeOff.push({
             id: i.employee[0].$.id,
             name: i.employee[0]._,

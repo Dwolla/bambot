@@ -1,7 +1,7 @@
 import { error } from '@therockstorm/utils'
 import { Callback, Context, Handler, ScheduledEvent } from 'aws-lambda'
 import { EmpMap } from './index'
-import * as dayjs from 'dayjs'
+import dayjs from 'dayjs'
 import { employees, holidaysAndTimeOff } from './fetcher'
 import { celebrations, holidays, timeOff } from './publisher'
 

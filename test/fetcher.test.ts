@@ -1,5 +1,5 @@
 import * as utils from '@therockstorm/utils'
-import * as dayjs from 'dayjs'
+import dayjs from 'dayjs'
 import * as http from '../src/http'
 jest.mock('axios')
 jest.mock('@therockstorm/utils')
@@ -65,7 +65,7 @@ test('holidaysAndTimeOff', async () => {
     },
     {
       $: { type: 'holiday' },
-      holidays: [{ _: exp.holidays[0].name }],
+      holiday: [{ _: exp.holidays[0].name }],
       start: [t]
     }
   ]
