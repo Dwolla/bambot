@@ -19,8 +19,8 @@ export const handle: Handler = async (
       holidaysAndTimeOff(today)
     ])
     await Promise.all([
-      holidays(hto.holidays),
-      timeOff(es, hto.timeOff, today),
+      holidays(hto.holidays, today),
+      timeOff(es, hto.timeOff, hto.holidays, today),
       celebrations(es, today)
     ])
     return cb(null, { success: true })

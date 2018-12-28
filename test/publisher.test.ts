@@ -8,23 +8,22 @@ jest.mock('../src/http')
 jest.mock('../src/color')
 const envVar = utils.envVar as jest.Mock
 const postJson = http.postJson as jest.Mock
-const color = colorMod.color as jest.Mock
+const color = colorMod.rndColor as jest.Mock
 const COLOR = '#000'
 const URL = 'env-var'
 envVar.mockReturnValue(URL)
-color.mockReturnValue(COLOR)
+color.mockReturnValue(() => COLOR)
 import { celebrations, holidays, timeOff } from '../src/publisher'
 
 afterEach(() => postJson.mockClear())
 
-const YMD_FORMAT = 'YYYY-MM-DD'
 const empMap: EmpMap = {
   'my-id': {
     id: 'my-id',
     name: 'my-name',
     photoUrl: 'my-photo.com',
-    birthday: '01-01',
-    hireDate: '2018-01-01'
+    birthday: dayjs('01-01'),
+    hireDate: dayjs('2018-01-01')
   }
 }
 
@@ -67,7 +66,7 @@ test('publish celebrations', async () => {
 })
 
 test('not publish if no holidays', async () => {
-  await holidays([])
+  await holidays([], dayjs())
 
   expect(postJson).not.toHaveBeenCalled
 })
@@ -75,7 +74,7 @@ test('not publish if no holidays', async () => {
 test('publish holidays', async () => {
   const name = 'Halloween'
 
-  await holidays([{ name }])
+  await holidays([{ name, start: dayjs() }], dayjs())
 
   expect(postJson).toHaveBeenCalledWith(URL, {
     text: 'Company-Observed Holiday',
@@ -84,15 +83,15 @@ test('publish holidays', async () => {
 })
 
 test('not publish if no timeOff', async () => {
-  await timeOff(empMap, [], dayjs())
+  await timeOff(empMap, [], [], dayjs())
 
   expect(postJson).not.toHaveBeenCalled
 })
 
 const expectPublishTimeOff = async (d: Day, dayOfWeek: string) => {
-  const to = { id: 'my-id', name: 'my-name', end: d.format(YMD_FORMAT) }
+  const to = { id: 'my-id', name: 'my-name', start: d, end: d }
 
-  await timeOff(empMap, [to], d)
+  await timeOff(empMap, [to], [], d)
 
   const text = `${to.name} returns ${dayOfWeek}`
   expect(postJson).toHaveBeenCalledWith(URL, {

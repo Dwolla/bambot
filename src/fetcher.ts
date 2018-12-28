@@ -29,11 +29,22 @@ export const employees = async (): Promise<EmpMap> =>
         photoUrl: e.photoUrl
       }))
       .map(
-        new TaskQueue(Promise, CONCURRENCY).wrap(async (e: any) => {
+        new TaskQueue(Promise, CONCURRENCY).wrap<
+          Emp,
+          {
+            id: string
+            name: string
+            photoUrl: string
+          }
+        >(async e => {
           const m = await getJson<EmpByIdRes>(
             `${BASE_URL}/employees/${e.id}?fields=birthday,hireDate`
           )
-          return { ...e, birthday: m.birthday, hireDate: m.hireDate }
+          return {
+            ...e,
+            birthday: dayjs(m.birthday),
+            hireDate: dayjs(m.hireDate)
+          }
         })
       )
   )).reduce(
@@ -47,17 +58,20 @@ export const employees = async (): Promise<EmpMap> =>
 export const holidaysAndTimeOff = async (today: Day): Promise<WhosOutMap> => {
   const empty = { holidays: [], timeOff: [] } as WhosOutMap
   const is = (await getXml<WhosOutRes>(
-    `${BASE_URL}/time_off/whos_out/?end=${today.format(YMD_FORMAT)}`
+    `${BASE_URL}/time_off/whos_out/?end=${today
+      .add(1, 'month')
+      .format(YMD_FORMAT)}`
   )).calendar.item
   return is
     ? is.reduce((res, i) => {
-        if (i.$.type === 'holiday' && today.isSame(dayjs(i.start[0])))
-          res.holidays.push({ name: i.holiday[0]._ })
-        else if (i.$.type === 'timeOff')
+        if (i.$.type === 'holiday' && i.holiday)
+          res.holidays.push({ name: i.holiday[0]._, start: dayjs(i.start[0]) })
+        else if (i.$.type === 'timeOff' && i.employee)
           res.timeOff.push({
             id: i.employee[0].$.id,
             name: i.employee[0]._,
-            end: i.end[0]
+            start: dayjs(i.start[0]),
+            end: dayjs(i.end[0])
           })
         return res
       }, empty)

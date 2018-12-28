@@ -11,6 +11,7 @@ const COLORS = [
 const rnd = (max: number, start: number = 0): number =>
   Math.floor(Math.random() * max + start)
 
-const s = rnd(COLORS.length)
-export const color = (i: number, seed: number = s): string =>
-  COLORS[Math.abs(seed + i) % COLORS.length]
+export const rndColor = (seed?: number): ((i: number) => string) => {
+  const s = seed === undefined ? rnd(COLORS.length) : seed
+  return (i: number) => COLORS[Math.abs(s + i) % COLORS.length]
+}

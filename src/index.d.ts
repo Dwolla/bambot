@@ -2,13 +2,13 @@ import dayjs from 'dayjs'
 
 export type Day = dayjs.Dayjs
 
-export type Emp = Readonly<{
+export interface Emp {
   id: string
   name: string
   photoUrl: string
-  birthday: string
-  hireDate: string
-}>
+  birthday: Day
+  hireDate: Day
+}
 
 export type EmpMap = {
   [id: string]: Emp
@@ -33,10 +33,10 @@ export type WhosOutRes = Readonly<{
   calendar: {
     item: {
       $: { type: string }
-      employee: { _: string; $: { id: string } }[]
       start: string[]
       end: string[]
-      [key: string]: any
+      employee?: { _: string; $: { id: string } }[]
+      holiday?: { _: string; $: { id: string } }[]
     }[]
   }
 }>
@@ -44,11 +44,13 @@ export type WhosOutRes = Readonly<{
 export type TimeOff = Readonly<{
   id: string
   name: string
-  end: string
+  start: Day
+  end: Day
 }>
 
 export type Holiday = Readonly<{
   name: string
+  start: Day
 }>
 
 export type WhosOutMap = Readonly<{
