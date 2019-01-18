@@ -1,31 +1,21 @@
 import { error } from '@therockstorm/utils'
-import { Callback, Context, Handler, ScheduledEvent } from 'aws-lambda'
-import { EmpMap } from './index'
+import { Handler } from 'aws-lambda'
 import dayjs from 'dayjs'
 import { employees, holidaysAndTimeOff } from './fetcher'
-import { celebrations, holidays, timeOff } from './publisher'
+import { toEmployees } from './mapper'
+import { timeOffAndCelebrations, holidays } from './publisher'
 
-process.on('unhandledRejection', e => error('unhandledRejection', e))
-
-export const handle: Handler = async (
-  _1: ScheduledEvent & EmpMap,
-  _2: Context,
-  cb: Callback
-) => {
+export const handle: Handler = async () => {
   try {
     const today = dayjs().startOf('day')
-    const [es, hto] = await Promise.all([
-      employees(),
-      holidaysAndTimeOff(today)
-    ])
+    const [es, wo] = await Promise.all([employees(), holidaysAndTimeOff(today)])
     await Promise.all([
-      holidays(hto.holidays, today),
-      timeOff(es, hto.timeOff, hto.holidays, today),
-      celebrations(es, today)
+      timeOffAndCelebrations(toEmployees(es, wo, today), today),
+      holidays(wo.holidays, today)
     ])
-    return cb(null, { success: true })
+    return { success: true }
   } catch (e) {
     error(e)
-    return cb(e)
+    throw e
   }
 }

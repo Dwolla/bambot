@@ -10,64 +10,41 @@ export interface Emp {
   hireDate: Day
 }
 
-export type EmpMap = {
-  [id: string]: Emp
-}
-
-export type DirectoryRes = Readonly<{
-  employees: {
-    id: string
-    displayName: string
-    preferredName?: string
-    lastName: string
-    photoUrl: string
-  }[]
-}>
-
-export type EmpByIdRes = Readonly<{
-  birthday: string
-  hireDate: string
-}>
-
-export type WhosOutRes = Readonly<{
-  calendar: {
-    item: {
-      $: { type: string }
-      start: string[]
-      end: string[]
-      employee?: { _: string; $: { id: string } }[]
-      holiday?: { _: string; $: { id: string } }[]
-    }[]
-  }
-}>
-
 export type TimeOff = Readonly<{
   id: string
-  name: string
-  start: Day
-  end: Day
+  startDate: Day
+  endDate: Day
 }>
 
 export type Holiday = Readonly<{
   name: string
-  start: Day
+  date: Day
 }>
 
-export type WhosOutMap = Readonly<{
-  timeOff: TimeOff[]
+export type WhosOut = Readonly<{
+  timeOff: { [id: string]: TimeOff[] }
   holidays: Holiday[]
 }>
 
-export type SlackMessage = Readonly<{
-  text: string
-  attachments: {
+export type Anniversary = Readonly<{ isAn: boolean; inDays: number }>
+
+export type Employee = Readonly<{
+  name: string
+  photoUrl: string
+  hireDate: Day
+  birthday: Anniversary
+  anniversary: Anniversary
+  returnDate?: Day
+}>
+
+export type SlackableEmp = Employee & Readonly<{ text: string }>
+
+export type SlackMsg = Readonly<{
+  text?: string
+  attachments?: {
     fallback: string
     author_name: string
     author_icon?: string
     color?: string
   }[]
-}>
-
-export type Slackable = Readonly<{
-  text: string
 }>

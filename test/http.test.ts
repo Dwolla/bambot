@@ -1,8 +1,9 @@
 import axios from 'axios'
 jest.mock('axios')
-import { getJson, getXml, postJson } from '../src/http'
+import { getJson, getXml, postMsg } from '../src/http'
+import { SlackMsg } from '../src'
 
-const URL = 'http://www.example.com'
+const URL = 'https://www.example.com'
 const DATA = { name: 'my-name' }
 const get = axios.get as jest.Mock
 const post = axios.post as jest.Mock
@@ -24,9 +25,10 @@ test('getXml', async () => {
 })
 
 test('publish', async () => {
+  const req = { text: 'hi', attachments: [] } as SlackMsg
   post.mockResolvedValue({ data: DATA })
 
-  expect(await postJson<TType>(URL, DATA)).toBe(DATA)
+  await postMsg(URL, req)
 
-  expect(post).toHaveBeenCalledWith(URL, JSON.stringify(DATA))
+  expect(post).toHaveBeenCalledWith(URL, JSON.stringify(req))
 })

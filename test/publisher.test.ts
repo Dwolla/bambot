@@ -2,30 +2,29 @@ import * as utils from '@therockstorm/utils'
 import dayjs from 'dayjs'
 import * as http from '../src/http'
 import * as colorMod from '../src/color'
-import { Day, EmpMap } from '../src'
+import { Employee } from '../src'
 jest.mock('@therockstorm/utils')
 jest.mock('../src/http')
 jest.mock('../src/color')
 const envVar = utils.envVar as jest.Mock
-const postJson = http.postJson as jest.Mock
+const postMsg = http.postMsg as jest.Mock
 const color = colorMod.rndColor as jest.Mock
 const COLOR = '#000'
 const URL = 'env-var'
 envVar.mockReturnValue(URL)
 color.mockReturnValue(() => COLOR)
-import { celebrations, holidays, timeOff } from '../src/publisher'
+import { holidays, timeOffAndCelebrations } from '../src/publisher'
 
-afterEach(() => postJson.mockClear())
+afterEach(() => postMsg.mockClear())
 
-const empMap: EmpMap = {
-  'my-id': {
-    id: 'my-id',
+const es: Employee[] = [
+  {
     name: 'my-name',
-    photoUrl: 'my-photo.com',
-    birthday: dayjs('01-01'),
-    hireDate: dayjs('2018-01-01')
-  }
-}
+    photoUrl: 'url',
+    birthday: { isAn: false, inDays: 0 },
+    anniversary: { isAn: false, inDays: 0 }
+  } as Employee
+]
 
 test('envVar', () => {
   expect(envVar).toHaveBeenCalledWith('SLACK_WEBHOOK_URL')
@@ -33,20 +32,24 @@ test('envVar', () => {
 
 test('not publish if no celebrations', async () => {
   const d = dayjs('2018-01-02')
-  await celebrations(empMap, d)
+  await timeOffAndCelebrations(es, d)
 
-  expect(postJson).not.toHaveBeenCalled
+  expect(postMsg).not.toHaveBeenCalled
 })
 
 test('publish celebrations', async () => {
-  const e = empMap['my-id']
-  const d = dayjs('2018-01-01')
+  const e = {
+    name: 'my-name',
+    photoUrl: 'url',
+    birthday: { isAn: true, inDays: 0 },
+    anniversary: { isAn: true, inDays: 0 }
+  } as Employee
 
-  await celebrations(empMap, d)
+  await timeOffAndCelebrations([e], dayjs())
 
   const aText = `Welcome, ${e.name}!`
   const bText = `Happy birthday, ${e.name}!`
-  expect(postJson).toHaveBeenCalledWith(URL, {
+  expect(postMsg).toHaveBeenCalledWith(URL, {
     text: ':tada: Celebrations :tada:',
     attachments: [
       {
@@ -68,62 +71,22 @@ test('publish celebrations', async () => {
 test('not publish if no holidays', async () => {
   await holidays([], dayjs())
 
-  expect(postJson).not.toHaveBeenCalled
+  expect(postMsg).not.toHaveBeenCalled
 })
 
 test('publish holidays', async () => {
   const name = 'Halloween'
 
-  await holidays([{ name, start: dayjs() }], dayjs())
+  await holidays([{ name, date: dayjs() }], dayjs())
 
-  expect(postJson).toHaveBeenCalledWith(URL, {
+  expect(postMsg).toHaveBeenCalledWith(URL, {
     text: 'Company-Observed Holiday',
     attachments: [{ fallback: name, author_name: name, color: COLOR }]
   })
 })
 
 test('not publish if no timeOff', async () => {
-  await timeOff(empMap, [], [], dayjs())
+  await timeOffAndCelebrations(es, dayjs())
 
-  expect(postJson).not.toHaveBeenCalled
+  expect(postMsg).not.toHaveBeenCalled
 })
-
-const expectPublishTimeOff = async (d: Day, dayOfWeek: string) => {
-  const to = { id: 'my-id', name: 'my-name', start: d, end: d }
-
-  await timeOff(empMap, [to], [], d)
-
-  const text = `${to.name} returns ${dayOfWeek}`
-  expect(postJson).toHaveBeenCalledWith(URL, {
-    text: ":palm_tree: Who's Out :palm_tree:",
-    attachments: [
-      {
-        fallback: text,
-        author_name: text,
-        author_icon: empMap[to.id].photoUrl,
-        color: COLOR
-      }
-    ]
-  })
-}
-
-test('publish timeOff ending Sun', async () =>
-  await expectPublishTimeOff(dayjs('2018-01-07'), 'Monday'))
-
-test('publish timeOff ending Mon', async () =>
-  await expectPublishTimeOff(dayjs('2018-01-08'), 'Tuesday'))
-
-test('publish timeOff ending Tue', async () =>
-  await expectPublishTimeOff(dayjs('2018-01-09'), 'Wednesday'))
-
-test('publish timeOff ending Wed', async () =>
-  await expectPublishTimeOff(dayjs('2018-01-10'), 'Thursday'))
-
-test('publish timeOff ending Thu', async () =>
-  await expectPublishTimeOff(dayjs('2018-01-11'), 'Friday'))
-
-test('publish timeOff ending Fri', async () =>
-  await expectPublishTimeOff(dayjs('2018-01-12'), 'Monday'))
-
-test('publish timeOff ending Sat', async () =>
-  await expectPublishTimeOff(dayjs('2018-01-13'), 'Monday'))

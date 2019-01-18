@@ -34,14 +34,14 @@ test('employees', async () => {
     .mockResolvedValueOnce({ employees: dirRes })
     .mockResolvedValueOnce(byIdRes)
 
-  expect(await employees()).toEqual({
-    'my-id': {
+  expect(await employees()).toEqual([
+    {
       id: 'my-id',
       name: 'my-name',
       photoUrl: 'my-photo.com',
       ...byIdRes
     }
-  })
+  ])
 
   expect(getJson).toHaveBeenCalledWith(`${BASE_URL}/employees/directory`)
   expect(getJson).toHaveBeenCalledWith(
@@ -53,21 +53,21 @@ test('holidaysAndTimeOff', async () => {
   const today = dayjs().startOf('day')
   const t = today
   const exp = {
-    holidays: [{ name: 'Thanksgiving Day', start: t }],
-    timeOff: [{ id: 'my-id', name: 'my-name', start: t, end: t }]
+    holidays: [{ name: 'Thanksgiving Day', date: t }],
+    timeOff: { 'my-id': [{ id: 'my-id', startDate: t, endDate: t }] }
   }
-  const to = exp.timeOff[0]
+  const to = exp.timeOff['my-id'][0]
   const outRes = [
     {
       $: { type: 'timeOff' },
-      employee: [{ _: to.name, $: { id: to.id } }],
-      start: [to.start],
-      end: [to.end]
+      employee: [{ $: { id: to.id } }],
+      start: [to.startDate],
+      end: [to.endDate]
     },
     {
       $: { type: 'holiday' },
       holiday: [{ _: exp.holidays[0].name }],
-      start: [t]
+      start: [exp.holidays[0].date]
     }
   ]
   getXml.mockResolvedValue({ calendar: { item: outRes } })
