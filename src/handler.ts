@@ -4,6 +4,7 @@ import dayjs from 'dayjs'
 import { employees, holidaysAndTimeOff } from './fetcher'
 import { toEmployees } from './mapper'
 import { timeOffAndCelebrations, holidays } from './publisher'
+import 'source-map-support/register'
 
 export const handle: Handler = async () => {
   try {

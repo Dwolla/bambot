@@ -29,7 +29,7 @@ test('employees', async () => {
   const byIdRes = {
     birthday: dayjs('01-01'),
     hireDate: dayjs('2018-01-01')
-  }
+  } as any
   getJson
     .mockResolvedValueOnce({ employees: dirRes })
     .mockResolvedValueOnce(byIdRes)
