@@ -13,6 +13,8 @@ export async function getJson<T>(url: string): Promise<T> {
 }
 
 export async function postMsg(url: string, msg: SlackMsg): Promise<void> {
-  if (!msg.text) return Promise.resolve()
+  if (!msg.text) {
+    return Promise.resolve()
+  }
   await axios.post(url, JSON.stringify(msg))
 }

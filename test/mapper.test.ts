@@ -5,16 +5,16 @@ import { DayOfWeek, toEmployees } from '../src/mapper'
 const today = dayjs().startOf('day')
 const es = [
   {
+    birthday: today.add(1, 'day'),
+    hireDate: today.add(1, 'day'),
     id: 'my-id',
     name: 'my-name',
-    photoUrl: 'my-url',
-    birthday: today.add(1, 'day'),
-    hireDate: today.add(1, 'day')
+    photoUrl: 'my-url'
   }
 ]
 const wo = {
-  timeOff: {},
-  holidays: []
+  holidays: [],
+  timeOff: {}
 }
 
 test('timeOff ending Sun', async () =>

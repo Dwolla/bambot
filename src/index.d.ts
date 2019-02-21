@@ -2,13 +2,13 @@ import dayjs from 'dayjs'
 
 export type Day = dayjs.Dayjs
 
-export interface Emp {
+export type Emp = Readonly<{
   id: string
   name: string
   photoUrl: string
   birthday: Day
   hireDate: Day
-}
+}>
 
 export type TimeOff = Readonly<{
   id: string
@@ -41,10 +41,10 @@ export type SlackableEmp = Employee & Readonly<{ text: string }>
 
 export type SlackMsg = Readonly<{
   text?: string
-  attachments?: {
+  attachments?: Array<{
     fallback: string
     author_name: string
     author_icon?: string
     color?: string
-  }[]
+  }>
 }>

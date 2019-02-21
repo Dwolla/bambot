@@ -1,15 +1,15 @@
-import { rndColor } from './color'
 import {
   Anniversary,
+  Day,
   Emp,
   Employee,
-  Day,
-  TimeOff,
-  WhosOut,
   Holiday,
   SlackableEmp,
-  SlackMsg
+  SlackMsg,
+  TimeOff,
+  WhosOut
 } from '.'
+import { rndColor } from './color'
 
 export const enum DayOfWeek {
   Sun = 0,
@@ -34,10 +34,16 @@ export const toEmployees = (es: Emp[], wo: WhosOut, today: Day): Employee[] => {
     }
     const res = (a: boolean, d: number) => ({ isAn: a, inDays: d })
     let i = 0
-    if (same(i)) return res(true, i)
+    if (same(i)) {
+      return res(true, i)
+    }
     if (isFri(today)) {
-      if (same(++i)) return res(true, i)
-      if (same(++i)) return res(true, i)
+      if (same(++i)) {
+        return res(true, i)
+      }
+      if (same(++i)) {
+        return res(true, i)
+      }
     }
     return res(false, 0)
   }
@@ -50,8 +56,10 @@ export const toEmployees = (es: Emp[], wo: WhosOut, today: Day): Employee[] => {
         const end = d.add(1, 'day')
         const ret = end.add(isSat(end) ? 2 : isSun(end) ? 1 : 0, 'day')
 
-        const h = wo.holidays.filter(h => ret.isSame(h.date))[0]
-        if (h) return returnDateRec(h.date)
+        const hol = wo.holidays.filter(h => ret.isSame(h.date))[0]
+        if (hol) {
+          return returnDateRec(hol.date)
+        }
 
         const fTo = empFutureTo
           .filter(f => !f.startDate.isAfter(ret) && !f.endDate.isBefore(ret))
@@ -63,11 +71,11 @@ export const toEmployees = (es: Emp[], wo: WhosOut, today: Day): Employee[] => {
     }
 
     return {
+      anniversary: anniversary(e.hireDate),
+      birthday: anniversary(e.birthday),
+      hireDate: e.hireDate,
       name: e.name,
       photoUrl: e.photoUrl,
-      hireDate: e.hireDate,
-      birthday: anniversary(e.birthday),
-      anniversary: anniversary(e.hireDate),
       returnDate: present.length ? returnDate(present[0]) : undefined
     }
   })
@@ -77,12 +85,12 @@ export const toHolidaysMsg = (holidays: Holiday[]): SlackMsg => {
   const rc = rndColor()
   return holidays.length
     ? {
-        text: 'Company-Observed Holiday',
         attachments: holidays.map(h => ({
-          fallback: h.name,
           author_name: h.name,
-          color: rc(0)
-        }))
+          color: rc(0),
+          fallback: h.name
+        })),
+        text: 'Company-Observed Holiday'
       }
     : {}
 }
@@ -91,15 +99,15 @@ export const toSlackMsg = (text: string, es: SlackableEmp[]): SlackMsg => {
   const rc = rndColor()
   return es.length
     ? {
-        text,
         attachments: es
           .sort((a, b) => (a.text < b.text ? -1 : 1))
           .map((e, i) => ({
-            fallback: e.text,
-            author_name: e.text,
             author_icon: e.photoUrl,
-            color: rc(i)
-          }))
+            author_name: e.text,
+            color: rc(i),
+            fallback: e.text
+          })),
+        text
       }
     : {}
 }

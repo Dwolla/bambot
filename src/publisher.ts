@@ -17,15 +17,18 @@ export const timeOffAndCelebrations = async (
   const d = es.reduce(
     (res, e) => {
       const addC = (text: string) => res.c.push({ ...e, text })
-      if (e.birthday.isAn)
+      if (e.birthday.isAn) {
         addC(`Happy birthday${dayStr(e.birthday.inDays)}, ${e.name}!`)
-      if (today.isSame(e.hireDate)) addC(`Welcome, ${e.name}!`)
-      else if (e.anniversary.isAn)
+      }
+      if (today.isSame(e.hireDate)) {
+        addC(`Welcome, ${e.name}!`)
+      } else if (e.anniversary.isAn) {
         addC(
           `Happy ${ordinal(
             today.add(e.anniversary.inDays, 'day').diff(e.hireDate, 'year')
           )} anniversary${dayStr(e.anniversary.inDays)}, ${e.name}!`
         )
+      }
       if (e.returnDate) {
         const diff = e.returnDate.diff(today, 'day')
         res.to.push({
@@ -46,11 +49,8 @@ export const timeOffAndCelebrations = async (
   await postMsg(WEBHOOK_URL, toSlackMsg(':tada: Celebrations :tada:', d.c))
 }
 
-export const holidays = async (
-  holidays: Holiday[],
-  today: Day
-): Promise<void> =>
+export const holidays = async (hs: Holiday[], today: Day): Promise<void> =>
   await postMsg(
     WEBHOOK_URL,
-    toHolidaysMsg(holidays.filter(h => today.isSame(h.date)))
+    toHolidaysMsg(hs.filter(h => today.isSame(h.date)))
   )

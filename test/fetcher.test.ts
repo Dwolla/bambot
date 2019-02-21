@@ -21,8 +21,8 @@ test('envVar', () => {
 test('employees', async () => {
   const dirRes = [
     {
-      id: 'my-id',
       displayName: 'my-name',
+      id: 'my-id',
       photoUrl: 'my-photo.com'
     }
   ]
@@ -61,8 +61,8 @@ test('holidaysAndTimeOff', async () => {
     {
       $: { type: 'timeOff' },
       employee: [{ $: { id: to.id } }],
-      start: [to.startDate],
-      end: [to.endDate]
+      end: [to.endDate],
+      start: [to.startDate]
     },
     {
       $: { type: 'holiday' },

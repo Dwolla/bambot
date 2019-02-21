@@ -1,7 +1,7 @@
 import { envVar } from '@therockstorm/utils'
-import { Day, Emp, WhosOut } from '.'
 import { TaskQueue } from 'cwait'
 import dayjs from 'dayjs'
+import { Day, Emp, WhosOut } from '.'
 import { getJson, getXml } from './http'
 
 const CONCURRENCY = 15
@@ -43,14 +43,14 @@ export const holidaysAndTimeOff = async (today: Day): Promise<WhosOut> => {
   )).calendar.item
   return is
     ? is.reduce((res, i) => {
-        if (i.$.type === 'holiday' && i.holiday)
+        if (i.$.type === 'holiday' && i.holiday) {
           res.holidays.push({ name: i.holiday[0]._, date: dayjs(i.start[0]) })
-        else if (i.$.type === 'timeOff' && i.employee) {
+        } else if (i.$.type === 'timeOff' && i.employee) {
           const id = i.employee[0].$.id
           const obj = {
+            endDate: dayjs(i.end[0]),
             id,
-            startDate: dayjs(i.start[0]),
-            endDate: dayjs(i.end[0])
+            startDate: dayjs(i.start[0])
           }
           res.timeOff[id]
             ? res.timeOff[id].push(obj)
@@ -62,13 +62,13 @@ export const holidaysAndTimeOff = async (today: Day): Promise<WhosOut> => {
 }
 
 type DirectoryRes = Readonly<{
-  employees: {
+  employees: Array<{
     id: string
     displayName: string
     preferredName?: string
     lastName: string
     photoUrl: string
-  }[]
+  }>
 }>
 
 type EmpRes = Readonly<{
@@ -84,12 +84,12 @@ type EmpByIdRes = Readonly<{
 
 type WhosOutRes = Readonly<{
   calendar: {
-    item: {
+    item: Array<{
       $: { type: string }
       start: string[]
       end: string[]
-      employee?: { _: string; $: { id: string } }[]
-      holiday?: { _: string; $: { id: string } }[]
-    }[]
+      employee?: Array<{ _: string; $: { id: string } }>
+      holiday?: Array<{ _: string; $: { id: string } }>
+    }>
   }
 }>

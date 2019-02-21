@@ -1,10 +1,10 @@
 import { error } from '@therockstorm/utils'
 import { Handler } from 'aws-lambda'
 import dayjs from 'dayjs'
+import 'source-map-support/register'
 import { employees, holidaysAndTimeOff } from './fetcher'
 import { toEmployees } from './mapper'
-import { timeOffAndCelebrations, holidays } from './publisher'
-import 'source-map-support/register'
+import { holidays, timeOffAndCelebrations } from './publisher'
 
 export const handle: Handler = async () => {
   try {
