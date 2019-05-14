@@ -11,5 +11,5 @@
     "lib": ["esnext"],
     "moduleResolution": "node"
   },
-  "include": ["src", "test"]
+  "include": ["src"]
 }

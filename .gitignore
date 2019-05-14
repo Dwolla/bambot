@@ -1,7 +1,8 @@
 .DS_Store
-
-.serverless
-.vscode
-.webpack
-node_modules
 test/data.json
+
+.idea/
+.serverless/
+.vscode/
+.webpack/
+node_modules/
