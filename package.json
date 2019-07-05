@@ -4,13 +4,15 @@
   "description": "BambooHR Slack bot publishes company holidays, work anniversaries, first days, birthdays, and who is out each weekday.",
   "license": "MIT",
   "scripts": {
-    "build": "serverless webpack",
-    "deploy": "npm test && serverless deploy --verbose",
-    "format": "prettier --write '{,!(.serverless|.webpack)/**/}*.+(js|json|md|ts|yml)'",
+    "build": "sls webpack",
+    "clean": "skripts clean src --pattern '*.js'",
+    "deploy": "sls deploy --verbose",
+    "format": "skripts prettier",
     "invoke": "ENVIRONMENT=local sls invoke local -f func",
-    "lint": "tslint './**/*.ts' --exclude './node_modules/**/*.ts' --fix",
-    "test": "npm run lint && jest",
-    "watch": "npm test -- --watch"
+    "jest": "skripts jest",
+    "lint": "skripts tslint",
+    "test": "npm run lint && npm run jest && sls package",
+    "watch": "npm run jest -- --watch"
   },
   "dependencies": {
     "@therockstorm/utils": "^3.0.10",
@@ -21,41 +23,14 @@
     "xml2js-es6-promise": "^1.1.1"
   },
   "devDependencies": {
-    "@types/aws-lambda": "^8.10.26",
-    "@types/jest": "^24.0.13",
-    "@types/node": "^12.0.4",
-    "husky": "^2.3.0",
-    "jest": "^24.8.0",
-    "lint-staged": "^8.1.7",
-    "lodash": ">=4.17.11",
-    "merge": ">=1.2.1",
-    "prettier": "^1.17.1",
-    "serverless": "^1.44.1",
-    "serverless-webpack": "^5.3.0",
-    "ts-jest": "^24.0.2",
-    "ts-loader": "^6.0.2",
-    "tslint": "^5.17.0",
-    "tslint-config-prettier": "^1.18.0",
-    "typescript": "^3.5.1",
-    "webpack": "^4.32.2",
-    "webpack-node-externals": "^1.7.2"
+    "husky": "^3.0.0",
+    "skripts": "0.0.16",
+    "tslint": "^5.18.0",
+    "typescript": "^3.5.2"
   },
   "husky": {
     "hooks": {
-      "pre-commit": "lint-staged"
+      "pre-commit": "skripts pre-commit"
     }
-  },
-  "lint-staged": {
-    "*.{ts}": [
-      "tslint --fix"
-    ],
-    "*.{js,json,md,ts,yml}": [
-      "prettier --write",
-      "git add"
-    ]
-  },
-  "prettier": {
-    "semi": false,
-    "singleQuote": true
   }
 }

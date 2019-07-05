@@ -1,15 +1,4 @@
 {
-  "compilerOptions": {
-    "esModuleInterop": true,
-    "sourceMap": true,
-    "strict": true,
-    "noImplicitReturns": true,
-    "noFallthroughCasesInSwitch": true,
-    "noUnusedLocals": true,
-    "noUnusedParameters": true,
-    "target": "es2015",
-    "lib": ["esnext"],
-    "moduleResolution": "node"
-  },
+  "extends": "./node_modules/skripts/base-tsconfig.json",
   "include": ["src"]
 }

@@ -1,14 +1,14 @@
-import { envVar } from '@therockstorm/utils'
-import { TaskQueue } from 'cwait'
-import dayjs from 'dayjs'
-import { Day, Emp, WhosOut } from '.'
-import { getJson, getXml } from './http'
+import { envVar } from "@therockstorm/utils"
+import { TaskQueue } from "cwait"
+import dayjs from "dayjs"
+import { Day, Emp, WhosOut } from "."
+import { getJson, getXml } from "./http"
 
 const CONCURRENCY = 15
-const YMD_FORMAT = 'YYYY-MM-DD'
+const YMD_FORMAT = "YYYY-MM-DD"
 const BASE_URL = `https://${envVar(
-  'BAMBOOHR_KEY'
-)}:x@api.bamboohr.com/api/gateway.php/${envVar('BAMBOOHR_SUBDOMAIN')}/v1`
+  "BAMBOOHR_KEY"
+)}:x@api.bamboohr.com/api/gateway.php/${envVar("BAMBOOHR_SUBDOMAIN")}/v1`
 
 export const employees = async (): Promise<Emp[]> =>
   await Promise.all<Emp>(
@@ -38,14 +38,14 @@ export const holidaysAndTimeOff = async (today: Day): Promise<WhosOut> => {
   const empty = { holidays: [], timeOff: {} } as WhosOut
   const is = (await getXml<WhosOutRes>(
     `${BASE_URL}/time_off/whos_out/?end=${today
-      .add(1, 'month')
+      .add(1, "month")
       .format(YMD_FORMAT)}`
   )).calendar.item
   return is
     ? is.reduce((res, i) => {
-        if (i.$.type === 'holiday' && i.holiday) {
+        if (i.$.type === "holiday" && i.holiday) {
           res.holidays.push({ name: i.holiday[0]._, date: dayjs(i.start[0]) })
-        } else if (i.$.type === 'timeOff' && i.employee) {
+        } else if (i.$.type === "timeOff" && i.employee) {
           const id = i.employee[0].$.id
           const obj = {
             endDate: dayjs(i.end[0]),

@@ -8,8 +8,8 @@ import {
   SlackMsg,
   TimeOff,
   WhosOut
-} from '.'
-import { rndColor } from './color'
+} from "."
+import { rndColor } from "./color"
 
 export const enum DayOfWeek {
   Sun = 0,
@@ -29,21 +29,15 @@ const isSun = (d: Day) => isDay(d, DayOfWeek.Sun)
 export const toEmployees = (es: Emp[], wo: WhosOut, today: Day): Employee[] => {
   const anniversary = (other: Day): Anniversary => {
     const same = (n: number): boolean => {
-      const d = today.add(n, 'day')
-      return d.isSame(other.set('year', d.year()))
+      const d = today.add(n, "day")
+      return d.isSame(other.set("year", d.year()))
     }
     const res = (a: boolean, d: number) => ({ isAn: a, inDays: d })
     let i = 0
-    if (same(i)) {
-      return res(true, i)
-    }
+    if (same(i)) return res(true, i)
     if (isFri(today)) {
-      if (same(++i)) {
-        return res(true, i)
-      }
-      if (same(++i)) {
-        return res(true, i)
-      }
+      if (same(++i)) return res(true, i)
+      if (same(++i)) return res(true, i)
     }
     return res(false, 0)
   }
@@ -53,17 +47,15 @@ export const toEmployees = (es: Emp[], wo: WhosOut, today: Day): Employee[] => {
     const returnDate = (to: TimeOff): Day => {
       const empFutureTo = future.filter(f => f.id === to.id)
       const returnDateRec = (d: Day): Day => {
-        const end = d.add(1, 'day')
-        const ret = end.add(isSat(end) ? 2 : isSun(end) ? 1 : 0, 'day')
+        const end = d.add(1, "day")
+        const ret = end.add(isSat(end) ? 2 : isSun(end) ? 1 : 0, "day")
 
         const hol = wo.holidays.filter(h => ret.isSame(h.date))[0]
-        if (hol) {
-          return returnDateRec(hol.date)
-        }
+        if (hol) return returnDateRec(hol.date)
 
         const fTo = empFutureTo
           .filter(f => !f.startDate.isAfter(ret) && !f.endDate.isBefore(ret))
-          .sort((a, b) => a.endDate.diff(b.endDate, 'day'))[0]
+          .sort((a, b) => a.endDate.diff(b.endDate, "day"))[0]
         return fTo ? returnDateRec(fTo.endDate) : ret
       }
 
@@ -90,7 +82,7 @@ export const toHolidaysMsg = (holidays: Holiday[]): SlackMsg => {
           color: rc(0),
           fallback: h.name
         })),
-        text: 'Company-Observed Holiday'
+        text: "Company-Observed Holiday"
       }
     : {}
 }

@@ -1,18 +1,18 @@
-import { envVar } from '@therockstorm/utils'
-import { Day, Employee, Holiday, SlackableEmp } from '.'
-import { postMsg } from './http'
-import { toHolidaysMsg, toSlackMsg } from './mapper'
-import { ordinal } from './ordinal'
+import { envVar } from "@therockstorm/utils"
+import { Day, Employee, Holiday, SlackableEmp } from "."
+import { postMsg } from "./http"
+import { toHolidaysMsg, toSlackMsg } from "./mapper"
+import { ordinal } from "./ordinal"
 
-const D_FORMAT = 'dddd'
-const WEBHOOK_URL = envVar('SLACK_WEBHOOK_URL')
+const D_FORMAT = "dddd"
+const WEBHOOK_URL = envVar("SLACK_WEBHOOK_URL")
 
 export const timeOffAndCelebrations = async (
   es: Employee[],
   today: Day
 ): Promise<void> => {
   const dayStr = (n: number): string =>
-    `${n === 0 ? '' : ` on ${today.add(n, 'day').format(D_FORMAT)}`}`
+    `${n === 0 ? "" : ` on ${today.add(n, "day").format(D_FORMAT)}`}`
 
   const d = es.reduce(
     (res, e) => {
@@ -25,16 +25,16 @@ export const timeOffAndCelebrations = async (
       } else if (e.anniversary.isAn) {
         addC(
           `Happy ${ordinal(
-            today.add(e.anniversary.inDays, 'day').diff(e.hireDate, 'year')
+            today.add(e.anniversary.inDays, "day").diff(e.hireDate, "year")
           )} anniversary${dayStr(e.anniversary.inDays)}, ${e.name}!`
         )
       }
       if (e.returnDate) {
-        const diff = e.returnDate.diff(today, 'day')
+        const diff = e.returnDate.diff(today, "day")
         res.to.push({
           ...e,
           text: `${e.name} returns ${e.returnDate.format(
-            diff >= 7 || diff < 0 ? 'ddd, MMM D' : D_FORMAT
+            diff >= 7 || diff < 0 ? "ddd, MMM D" : D_FORMAT
           )}`
         })
       }
@@ -46,7 +46,7 @@ export const timeOffAndCelebrations = async (
     WEBHOOK_URL,
     toSlackMsg(":palm_tree: Who's Out :palm_tree:", d.to)
   )
-  await postMsg(WEBHOOK_URL, toSlackMsg(':tada: Celebrations :tada:', d.c))
+  await postMsg(WEBHOOK_URL, toSlackMsg(":tada: Celebrations :tada:", d.c))
 }
 
 export const holidays = async (hs: Holiday[], today: Day): Promise<void> =>

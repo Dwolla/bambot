@@ -1,50 +1,51 @@
-import dayjs from 'dayjs'
+import dayjs from "dayjs"
 
 export type Day = dayjs.Dayjs
 
 export type Emp = Readonly<{
+  birthday: Day
+  hireDate: Day
   id: string
   name: string
   photoUrl: string
-  birthday: Day
-  hireDate: Day
 }>
 
 export type TimeOff = Readonly<{
+  endDate: Day
   id: string
   startDate: Day
-  endDate: Day
 }>
 
 export type Holiday = Readonly<{
-  name: string
   date: Day
+  name: string
 }>
 
 export type WhosOut = Readonly<{
-  timeOff: { [id: string]: TimeOff[] }
   holidays: Holiday[]
+  timeOff: { [id: string]: TimeOff[] }
 }>
 
 export type Anniversary = Readonly<{ isAn: boolean; inDays: number }>
 
 export type Employee = Readonly<{
+  anniversary: Anniversary
+  birthday: Anniversary
+  hireDate: Day
   name: string
   photoUrl: string
-  hireDate: Day
-  birthday: Anniversary
-  anniversary: Anniversary
   returnDate?: Day
 }>
 
 export type SlackableEmp = Employee & Readonly<{ text: string }>
 
 export type SlackMsg = Readonly<{
-  text?: string
   attachments?: Array<{
-    fallback: string
-    author_name: string
     author_icon?: string
+    author_name: string
     color?: string
+    fallback: string
   }>
+  channel?: string
+  text?: string
 }>
