@@ -15,18 +15,18 @@
     "watch": "npm run jest -- --watch"
   },
   "dependencies": {
-    "@therockstorm/utils": "^3.0.10",
+    "@therockstorm/utils": "^3.0.11",
     "axios": "^0.19.0",
     "cwait": "^1.1.2",
-    "dayjs": "^1.8.15",
-    "source-map-support": "^0.5.12",
+    "dayjs": "^1.8.16",
+    "source-map-support": "^0.5.13",
     "xml2js-es6-promise": "^1.1.1"
   },
   "devDependencies": {
-    "husky": "^3.0.0",
-    "skripts": "0.0.16",
-    "tslint": "^5.18.0",
-    "typescript": "^3.5.3"
+    "husky": "^3.0.5",
+    "skripts": "0.0.22",
+    "tslint": "^5.20.0",
+    "typescript": "^3.6.2"
   },
   "husky": {
     "hooks": {
