@@ -5,10 +5,10 @@ const COLORS = [
   "#00FF00",
   "#FFFF00",
   "#FF7F00",
-  "#FF0000"
+  "#FF0000",
 ]
 
-const rnd = (max: number, start: number = 0): number =>
+const rnd = (max: number, start = 0): number =>
   Math.floor(Math.random() * max + start)
 
 export const rndColor = (seed?: number): ((i: number) => string) => {

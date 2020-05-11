@@ -23,12 +23,12 @@ test("employees", async () => {
     {
       displayName: "my-name",
       id: "my-id",
-      photoUrl: "my-photo.com"
-    }
+      photoUrl: "my-photo.com",
+    },
   ]
   const byIdRes = {
     birthday: dayjs("01-01"),
-    hireDate: dayjs("2018-01-01")
+    hireDate: dayjs("2018-01-01"),
   } as any
   getJson
     .mockResolvedValueOnce({ employees: dirRes })
@@ -39,8 +39,8 @@ test("employees", async () => {
       id: "my-id",
       name: "my-name",
       photoUrl: "my-photo.com",
-      ...byIdRes
-    }
+      ...byIdRes,
+    },
   ])
 
   expect(getJson).toHaveBeenCalledWith(`${BASE_URL}/employees/directory`)
@@ -54,7 +54,7 @@ test("holidaysAndTimeOff", async () => {
   const t = today
   const exp = {
     holidays: [{ name: "Thanksgiving Day", date: t }],
-    timeOff: { "my-id": [{ id: "my-id", startDate: t, endDate: t }] }
+    timeOff: { "my-id": [{ id: "my-id", startDate: t, endDate: t }] },
   }
   const to = exp.timeOff["my-id"][0]
   const outRes = [
@@ -62,13 +62,13 @@ test("holidaysAndTimeOff", async () => {
       $: { type: "timeOff" },
       employee: [{ $: { id: to.id } }],
       end: [to.endDate],
-      start: [to.startDate]
+      start: [to.startDate],
     },
     {
       $: { type: "holiday" },
       holiday: [{ _: exp.holidays[0].name }],
-      start: [exp.holidays[0].date]
-    }
+      start: [exp.holidays[0].date],
+    },
   ]
   getXml.mockResolvedValue({ calendar: { item: outRes } })
 

@@ -12,7 +12,7 @@ export const handle: Handler = async () => {
     const [es, wo] = await Promise.all([employees(), holidaysAndTimeOff(today)])
     await Promise.all([
       timeOffAndCelebrations(toEmployees(es, wo, today), today),
-      holidays(wo.holidays, today)
+      holidays(wo.holidays, today),
     ])
     return { success: true }
   } catch (e) {

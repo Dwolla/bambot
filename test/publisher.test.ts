@@ -26,7 +26,7 @@ test("publish celebrations", async () => {
     birthday: { isAn: true, inDays: 0 },
     hireDate: today,
     name: "my-name",
-    photoUrl: "url"
+    photoUrl: "url",
   } as Employee
 
   await timeOffAndCelebrations([e], today)
@@ -39,16 +39,16 @@ test("publish celebrations", async () => {
         author_icon: e.photoUrl,
         author_name: bText,
         color: COLOR,
-        fallback: bText
+        fallback: bText,
       },
       {
         author_icon: e.photoUrl,
         author_name: aText,
         color: COLOR,
-        fallback: aText
-      }
+        fallback: aText,
+      },
     ],
-    text: ":tada: Celebrations :tada:"
+    text: ":tada: Celebrations :tada:",
   })
 })
 
@@ -59,6 +59,6 @@ test("publish holidays", async () => {
 
   expect(postMsg).toHaveBeenCalledWith(URL, {
     attachments: [{ fallback: name, author_name: name, color: COLOR }],
-    text: "Company-Observed Holiday"
+    text: "Company-Observed Holiday",
   })
 })
