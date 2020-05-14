@@ -40,12 +40,12 @@ export type Employee = Readonly<{
 export type SlackableEmp = Employee & Readonly<{ text: string }>
 
 export type SlackMsg = Readonly<{
-  attachments?: Array<{
+  attachments?: {
     author_icon?: string
     author_name: string
     color?: string
     fallback: string
-  }>
+  }[]
   channel?: string
   text?: string
 }>

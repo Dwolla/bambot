@@ -13,22 +13,22 @@ const BASE_URL = `https://${envVar(
 export const employees = async (): Promise<Emp[]> =>
   await Promise.all<Emp>(
     (await getJson<DirectoryRes>(`${BASE_URL}/employees/directory`)).employees
-      .map(e => ({
+      .map((e) => ({
         id: e.id,
         name: e.preferredName
           ? `${e.preferredName} ${e.lastName}`
           : e.displayName,
-        photoUrl: e.photoUrl
+        photoUrl: e.photoUrl,
       }))
       .map(
-        new TaskQueue(Promise, CONCURRENCY).wrap<Emp, EmpRes>(async e => {
+        new TaskQueue(Promise, CONCURRENCY).wrap<Emp, EmpRes>(async (e) => {
           const m = await getJson<EmpByIdRes>(
             `${BASE_URL}/employees/${e.id}?fields=birthday,hireDate`
           )
           return {
             ...e,
             birthday: dayjs(m.birthday),
-            hireDate: dayjs(m.hireDate)
+            hireDate: dayjs(m.hireDate),
           }
         })
       )
@@ -36,11 +36,13 @@ export const employees = async (): Promise<Emp[]> =>
 
 export const holidaysAndTimeOff = async (today: Day): Promise<WhosOut> => {
   const empty = { holidays: [], timeOff: {} } as WhosOut
-  const is = (await getXml<WhosOutRes>(
-    `${BASE_URL}/time_off/whos_out/?end=${today
-      .add(1, "month")
-      .format(YMD_FORMAT)}`
-  )).calendar.item
+  const is = (
+    await getXml<WhosOutRes>(
+      `${BASE_URL}/time_off/whos_out/?end=${today
+        .add(1, "month")
+        .format(YMD_FORMAT)}`
+    )
+  ).calendar.item
   return is
     ? is.reduce((res, i) => {
         if (i.$.type === "holiday" && i.holiday) {
@@ -50,7 +52,7 @@ export const holidaysAndTimeOff = async (today: Day): Promise<WhosOut> => {
           const obj = {
             endDate: dayjs(i.end[0]),
             id,
-            startDate: dayjs(i.start[0])
+            startDate: dayjs(i.start[0]),
           }
           res.timeOff[id]
             ? res.timeOff[id].push(obj)
@@ -62,13 +64,13 @@ export const holidaysAndTimeOff = async (today: Day): Promise<WhosOut> => {
 }
 
 type DirectoryRes = Readonly<{
-  employees: Array<{
+  employees: {
     id: string
     displayName: string
     preferredName?: string
     lastName: string
     photoUrl: string
-  }>
+  }[]
 }>
 
 type EmpRes = Readonly<{
@@ -84,12 +86,12 @@ type EmpByIdRes = Readonly<{
 
 type WhosOutRes = Readonly<{
   calendar: {
-    item: Array<{
+    item: {
       $: { type: string }
       start: string[]
       end: string[]
-      employee?: Array<{ _: string; $: { id: string } }>
-      holiday?: Array<{ _: string; $: { id: string } }>
-    }>
+      employee?: { _: string; $: { id: string } }[]
+      holiday?: { _: string; $: { id: string } }[]
+    }[]
   }
 }>

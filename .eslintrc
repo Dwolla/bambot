@@ -1,0 +1,8 @@
+{
+  "extends": "./node_modules/skripts/.eslintrc",
+  "rules": {
+    "@typescript-eslint/camelcase": ["off"],
+    "@typescript-eslint/ban-ts-ignore": ["off"],
+    "@typescript-eslint/interface-name-prefix": ["off"]
+  }
+}

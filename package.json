@@ -7,26 +7,26 @@
     "build": "sls webpack",
     "clean": "skripts clean src --pattern '*.js'",
     "deploy": "sls deploy --verbose",
-    "format": "skripts prettier",
+    "format": "skripts format",
     "invoke": "ENVIRONMENT=local sls invoke local -f func",
-    "jest": "skripts jest",
-    "lint": "skripts tslint",
+    "jest": "jest",
+    "lint": "skripts lint --fix",
     "test": "npm run lint && npm run jest && sls package",
     "watch": "npm run jest -- --watch"
   },
   "dependencies": {
-    "@therockstorm/utils": "^3.0.11",
-    "axios": "^0.19.0",
+    "@therockstorm/utils": "^3.0.19",
+    "axios": "^0.19.2",
     "cwait": "^1.1.2",
-    "dayjs": "^1.8.16",
-    "source-map-support": "^0.5.13",
+    "dayjs": "^1.8.26",
+    "source-map-support": "^0.5.19",
     "xml2js-es6-promise": "^1.1.1"
   },
   "devDependencies": {
-    "husky": "^3.0.5",
-    "skripts": "0.0.22",
-    "tslint": "^5.20.0",
-    "typescript": "^3.6.2"
+    "eslint": "^7.0.0",
+    "husky": "^4.2.5",
+    "skripts": "^0.5.1",
+    "typescript": "^3.8.3"
   },
   "husky": {
     "hooks": {

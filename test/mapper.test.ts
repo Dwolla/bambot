@@ -9,12 +9,12 @@ const es = [
     hireDate: today.add(1, "day"),
     id: "my-id",
     name: "my-name",
-    photoUrl: "my-url"
-  }
+    photoUrl: "my-url",
+  },
 ]
 const wo = {
   holidays: [],
-  timeOff: {}
+  timeOff: {},
 }
 
 test("timeOff ending Sun", async () =>

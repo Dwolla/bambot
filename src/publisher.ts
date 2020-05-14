@@ -35,7 +35,7 @@ export const timeOffAndCelebrations = async (
           ...e,
           text: `${e.name} returns ${e.returnDate.format(
             diff >= 7 || diff < 0 ? "ddd, MMM D" : D_FORMAT
-          )}`
+          )}`,
         })
       }
       return res
@@ -52,5 +52,5 @@ export const timeOffAndCelebrations = async (
 export const holidays = async (hs: Holiday[], today: Day): Promise<void> =>
   await postMsg(
     WEBHOOK_URL,
-    toHolidaysMsg(hs.filter(h => today.isSame(h.date)))
+    toHolidaysMsg(hs.filter((h) => today.isSame(h.date)))
   )
