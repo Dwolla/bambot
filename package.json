@@ -19,6 +19,7 @@
     "axios": "^0.19.2",
     "cwait": "^1.1.2",
     "dayjs": "^1.8.26",
+    "kind-of": "^6.0.3",
     "source-map-support": "^0.5.19",
     "xml2js-es6-promise": "^1.1.1"
   },
