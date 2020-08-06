@@ -21,7 +21,10 @@
     "dayjs": "^1.8.26",
     "kind-of": "^6.0.3",
     "source-map-support": "^0.5.19",
-    "xml2js-es6-promise": "^1.1.1"
+    "xml2js-es6-promise": "^1.1.1",
+    "lodash": ">=4.17.19",
+    "dot-prop": ">=5.1.1",
+    "elliptic": ">=6.5.3"
   },
   "devDependencies": {
     "eslint": "^7.0.0",
