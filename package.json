@@ -16,7 +16,7 @@
   },
   "dependencies": {
     "@therockstorm/utils": "^3.0.19",
-    "axios": "^0.19.2",
+    "axios": "^0.21.1",
     "cwait": "^1.1.2",
     "dayjs": "^1.8.26",
     "kind-of": "^6.0.3",
